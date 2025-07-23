@@ -59,7 +59,8 @@ class ViewController: BaseViewController {
 
     @objc func buttonTapped(_ sender: UIButton) {
         if sender.currentTitle == ButtonsTitle.lotto.rawValue {
-            print("로또 버튼 클릭")
+            let vc = LottoViewController()
+            present(vc, animated: true)
         } else {
             print("무비 버튼 클릭")
         }
