@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+protocol BaseCellProtocol {
+    func configureHierachy()
+    func configureUI()
+    func setConstraints()
+}

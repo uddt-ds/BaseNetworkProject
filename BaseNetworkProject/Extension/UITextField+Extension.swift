@@ -13,6 +13,7 @@ extension UITextField {
     func addBottomView(lineHeight: CGFloat, color: CGColor) {
         borderStyle = .none
 
+        //이 시점에서 bounds.width가 0이라서 못그리는 상황
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: bounds.size.height + lineHeight))
         path.addLine(to: CGPoint(x: bounds.width, y: bounds.size.height + lineHeight))

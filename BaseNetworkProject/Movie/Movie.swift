@@ -11,6 +11,11 @@ struct Movie {
     let title: String
     let releaseDate: String
     let audienceCount: Int
+
+    var date: String {
+        let rawDate = DateFormat.getDate(str: self.releaseDate)
+        return DateFormat.getString(date: rawDate)
+    }
 }
 
 struct MovieInfo {
@@ -115,5 +120,8 @@ struct MovieInfo {
         Movie(title: "검은 사제들", releaseDate: "20151105", audienceCount: 5443232),
     ]
 
+    static var shuffledMovie: [Movie] {
+        return MovieInfo.movies.shuffled()
+    }
 }
 
