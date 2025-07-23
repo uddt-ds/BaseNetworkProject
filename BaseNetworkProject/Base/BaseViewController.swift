@@ -31,8 +31,4 @@ class BaseViewController: UIViewController {
     }
 }
 
-//protocol BaseVCProtocol {
-//    func configureHierachy()
-//    func configureUI()
-//    func setConstraints()
-//}
+

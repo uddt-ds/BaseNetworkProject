@@ -63,7 +63,9 @@ class ViewController: BaseViewController {
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true)
         } else {
-            print("무비 버튼 클릭")
+            let vc = MovieViewController()
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true)
         }
     }
 }
