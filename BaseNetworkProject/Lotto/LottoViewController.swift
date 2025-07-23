@@ -14,6 +14,8 @@ class LottoViewController: BaseViewController {
 
     private var currentNum: Int = 0
 
+    private var lottoArray: [Int] = []
+
     private let pickerView: UIPickerView = {
         let pickerView = UIPickerView()
         return pickerView
@@ -134,9 +136,7 @@ class LottoViewController: BaseViewController {
         currentNum = pickerViewData.pickerArr.last ?? 0
         let num = currentNum
         let fullText = "\(num)회 당첨결과"
-        let attributedString = NSMutableAttributedString(string: fullText)
-        let range = (fullText as NSString).range(of: "\(num)회")
-        attributedString.addAttributes([.foregroundColor: UIColor.systemYellow], range: range)
+        let attributedString = fullText.getAttributedString(.systemYellow, target: "\(num)회")
         resultLabel.attributedText = attributedString
 
         textField.text = "\(num)"
@@ -261,9 +261,7 @@ extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         print(row)
         let num = row + 1
         let fullText = "\(num)회 당첨결과"
-        let attributedString = NSMutableAttributedString(string: fullText)
-        let range = (fullText as NSString).range(of: "\(num)회")
-        attributedString.addAttributes([.foregroundColor: UIColor.systemYellow], range: range)
+        let attributedString = fullText.getAttributedString(.systemYellow, target: "\(num)회")
         resultLabel.attributedText = attributedString
 
         textField.text = "\(num)"
