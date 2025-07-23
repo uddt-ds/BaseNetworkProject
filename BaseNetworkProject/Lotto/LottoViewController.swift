@@ -16,6 +16,11 @@ class LottoViewController: BaseViewController {
         textField.inputView = UIPickerView()
         textField.font = .boldSystemFont(ofSize: 14)
         textField.text = "테스트"
+        textField.textAlignment = .center
+        textField.layer.cornerRadius = 6
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.clipsToBounds = true
         return textField
     }()
 
@@ -29,20 +34,21 @@ class LottoViewController: BaseViewController {
     private let dateLabel: UILabel = {
         let label = UILabel()
         let title = "2020-05-30 추첨"
-        label.designLabel(title: title, font: .systemFont(ofSize: 10), color: .gray)
+        label.designLabel(title: title, font: .systemFont(ofSize: 10), color: .lightGray)
         return label
     }()
 
     private let separateLine: UIView = {
         let view = UIView()
-        view.backgroundColor = .gray
+        view.backgroundColor = .lightGray
         return view
     }()
 
     private let resultLabel: UILabel = {
         let label = UILabel()
         let title = "913회 당첨결과"
-        label.designLabel(title: title, font: .boldSystemFont(ofSize: 14), color: .black)
+        label.designLabel(title: title, font: .boldSystemFont(ofSize: 16), color: .black)
+        label.textAlignment = .center
         return label
     }()
 
@@ -64,10 +70,12 @@ class LottoViewController: BaseViewController {
 
     private let lastButton: UIButton = {
         let button = UIButton()
-        button.setTitle("88", for: .normal)
+        button.setTitle("12", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemYellow
         button.isUserInteractionEnabled = false
+        button.layer.cornerRadius = 18
+        button.clipsToBounds = true
         return button
     }()
 
@@ -119,14 +127,38 @@ class LottoViewController: BaseViewController {
     override func setConstraints() {
         super.setConstraints()
 
-        leftBallStackView.snp.makeConstraints { make in
-            make.height.equalTo(36)
+        textField.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(8)
+            make.directionalHorizontalEdges.equalToSuperview().inset(8)
+            make.height.equalTo(44)
         }
 
-        totalStackView.snp.makeConstraints { make in
-            make.directionalHorizontalEdges.equalToSuperview().inset(16)
-            make.height.equalTo(60)
-            make.centerY.equalToSuperview()
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(textField.snp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(8)
+            make.height.equalTo(30)
+        }
+
+        dateLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel.snp.centerY)
+            make.trailing.equalToSuperview().offset(-8)
+            make.height.equalTo(30)
+        }
+
+        separateLine.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.directionalHorizontalEdges.equalToSuperview()
+            make.height.equalTo(1)
+        }
+
+        resultLabel.snp.makeConstraints { make in
+            make.top.equalTo(separateLine.snp.bottom).offset(20)
+            make.directionalHorizontalEdges.equalToSuperview().inset(50)
+            make.height.equalTo(40)
+        }
+
+        leftBallStackView.snp.makeConstraints { make in
+            make.height.equalTo(36)
         }
 
         plusLabel.snp.makeConstraints { make in
@@ -140,6 +172,12 @@ class LottoViewController: BaseViewController {
         bonusLabel.snp.makeConstraints { make in
             make.height.equalTo(20)
         }
+
+        totalStackView.snp.makeConstraints { make in
+            make.top.equalTo(resultLabel.snp.bottom).offset(16)
+            make.directionalHorizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(60)
+        }
     }
 
     private func makeButtons() {
@@ -150,6 +188,9 @@ class LottoViewController: BaseViewController {
             button.backgroundColor = .systemYellow
             button.isUserInteractionEnabled = false
             button.tag = i
+
+            button.layer.cornerRadius = 18
+            button.clipsToBounds = true
 
             button.snp.makeConstraints { make in
                 make.size.equalTo(36)

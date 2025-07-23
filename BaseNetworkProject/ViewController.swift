@@ -60,6 +60,7 @@ class ViewController: BaseViewController {
     @objc func buttonTapped(_ sender: UIButton) {
         if sender.currentTitle == ButtonsTitle.lotto.rawValue {
             let vc = LottoViewController()
+            vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true)
         } else {
             print("무비 버튼 클릭")
