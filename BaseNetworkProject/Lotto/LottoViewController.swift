@@ -10,12 +10,20 @@ import SnapKit
 
 class LottoViewController: BaseViewController {
 
-    private let textField: UITextField = {
+    let pickerViewData = PickerViewData()
+
+    private var currentNum: Int = 0
+
+    private let pickerView: UIPickerView = {
+        let pickerView = UIPickerView()
+        return pickerView
+    }()
+
+    private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .line
-        textField.inputView = UIPickerView()
+        textField.inputView = pickerView
         textField.font = .boldSystemFont(ofSize: 14)
-        textField.text = "테스트"
         textField.textAlignment = .center
         textField.layer.cornerRadius = 6
         textField.layer.borderWidth = 1
@@ -46,7 +54,8 @@ class LottoViewController: BaseViewController {
 
     private let resultLabel: UILabel = {
         let label = UILabel()
-        let title = "913회 당첨결과"
+        let title = ""
+        let fullText = title
         label.designLabel(title: title, font: .boldSystemFont(ofSize: 16), color: .black)
         label.textAlignment = .center
         return label
@@ -110,6 +119,27 @@ class LottoViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         makeButtons()
+
+        pickerView.dataSource = self
+        pickerView.delegate = self
+        let row = pickerView.numberOfRows(inComponent: 0) - 1
+        pickerView.selectRow(row, inComponent: 0, animated: true)
+
+        initialSet()
+
+        backgroundTapped()
+    }
+
+    private func initialSet() {
+        currentNum = pickerViewData.pickerArr.last ?? 0
+        let num = currentNum
+        let fullText = "\(num)회 당첨결과"
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let range = (fullText as NSString).range(of: "\(num)회")
+        attributedString.addAttributes([.foregroundColor: UIColor.systemYellow], range: range)
+        resultLabel.attributedText = attributedString
+
+        textField.text = "\(num)"
     }
 
     override func configureHierachy() {
@@ -199,5 +229,43 @@ class LottoViewController: BaseViewController {
             leftBallStackView.addArrangedSubview(button)
             buttonArray.append(button)
         }
+    }
+}
+
+extension LottoViewController {
+    func backgroundTapped() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc private func viewTapped() {
+        view.endEditing(true)
+    }
+}
+
+extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerViewData.pickerArr.count
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return String(pickerViewData.pickerArr[row])
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(row)
+        let num = row + 1
+        let fullText = "\(num)회 당첨결과"
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let range = (fullText as NSString).range(of: "\(num)회")
+        attributedString.addAttributes([.foregroundColor: UIColor.systemYellow], range: range)
+        resultLabel.attributedText = attributedString
+
+        textField.text = "\(num)"
     }
 }

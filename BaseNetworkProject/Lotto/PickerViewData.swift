@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct PickerViewData {
+    let pickerData = 1...1181
+
+    var pickerArr: [Int] {
+        return [Int](pickerData)
+    }
+}
