@@ -8,6 +8,7 @@
 import Foundation
 
 struct PickerViewData {
+    //TODO: 하드코딩 개선하기
     let pickerData = 1...1181
 
     var pickerArr: [Int] {

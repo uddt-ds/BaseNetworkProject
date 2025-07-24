@@ -82,9 +82,9 @@ class MovieTableViewCell: UITableViewCell, BaseCellProtocol {
         }
     }
 
-    func configureCell(data: Movie, indexNum: Int) {
-        label.text = "\(indexNum + 1)"
-        movieTitleLabel.text = data.title
-        dateLabel.text = data.date
+    func configureCell(data: MovieData) {
+        label.text = data.rank
+        movieTitleLabel.text = data.movieNm
+        dateLabel.text = data.openDt
     }
 }

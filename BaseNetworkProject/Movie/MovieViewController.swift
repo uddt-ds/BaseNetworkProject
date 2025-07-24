@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Alamofire
 
 class MovieViewController: UIViewController, BaseVCProtocol {
 
-    var currentData: [Movie] = []
+    var currentData: [MovieData] = []
+    var currentDate: String = ""
 
     private let textField: UITextField = {
         let textField = UITextField()
@@ -37,7 +39,10 @@ class MovieViewController: UIViewController, BaseVCProtocol {
         configureUI()
         setConstraints()
 
-        currentData = MovieInfo.movies
+//        currentData = MovieInfo.movies
+        currentDate = DateFormat.makeYesterDay()
+        print(currentDate)
+        fetch(date: currentDate)
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -86,9 +91,28 @@ class MovieViewController: UIViewController, BaseVCProtocol {
         }
     }
 
+    private func fetch(date: String) {
+        let url = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=db57e192674e643639b0af1738f61186&targetDt=\(date)"
+
+        AF.request(url, method: .get).responseDecodable(of: MovieResult.self) { response in
+            switch response.result {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    self.currentData = data.boxOfficeResult.rankInData
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+
     @objc private func searchTapped(_ sender: Any) {
-        currentData = MovieInfo.shuffledMovie
-        tableView.reloadData()
+        guard let text = textField.text else { return }
+//        let vc = EasyMovieViewController(date: text)
+//        present(vc, animated: true)
+//        currentDate = text
+        fetch(date: text)
         view.endEditing(true)
     }
 }
@@ -100,7 +124,7 @@ extension MovieViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.id, for: indexPath) as! MovieTableViewCell
-        cell.configureCell(data: currentData[indexPath.row], indexNum: indexPath.row)
+        cell.configureCell(data: currentData[indexPath.row])
         return cell
     }
 }

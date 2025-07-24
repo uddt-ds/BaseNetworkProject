@@ -25,4 +25,10 @@ struct DateFormat {
         dateFormatter2.dateFormat = DateType.hyphenDate.rawValue
         return DateFormat.dateFormatter2.string(from: date)
     }
+
+    static func makeYesterDay() -> String {
+        let yDay = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+        dateFormatter.dateFormat = DateType.justStr.rawValue
+        return DateFormat.dateFormatter.string(from: yDay)
+    }
 }
