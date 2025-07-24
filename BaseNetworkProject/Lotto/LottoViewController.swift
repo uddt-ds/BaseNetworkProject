@@ -15,8 +15,6 @@ class LottoViewController: BaseViewController {
 
     private var currentNum: Int = 0
 
-    private var lottoArray: [Int] = []
-
     private let pickerView: UIPickerView = {
         let pickerView = UIPickerView()
         return pickerView
@@ -143,7 +141,6 @@ class LottoViewController: BaseViewController {
 
         backgroundTapped()
 
-        currentNum = 1181
         fetchData(currentNum)
     }
 
@@ -275,6 +272,10 @@ class LottoViewController: BaseViewController {
         }
 
         dateLabel.text = data.drwNoDate + " 추첨"
+    }
+
+    private func checkWeekend() {
+
     }
 }
 
