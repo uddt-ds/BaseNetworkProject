@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Alamofire
 
 class LottoViewController: BaseViewController {
 
@@ -67,7 +68,7 @@ class LottoViewController: BaseViewController {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        stackView.spacing = 4
+        stackView.spacing = 8
         stackView.alignment = .center
         return stackView
     }()
@@ -115,6 +116,17 @@ class LottoViewController: BaseViewController {
         return stackView
     }()
 
+    //MARK: 임시 버튼
+    private lazy var dismissButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("dismiss", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 10)
+        button.frame = .init(x: view.frame.width / 2.5, y: view.frame.height - 100, width: 50, height: 20)
+        button.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
     var buttonArray: [UIButton] = []
     var numberArray: [Int] = []
 
@@ -130,6 +142,9 @@ class LottoViewController: BaseViewController {
         initialSet()
 
         backgroundTapped()
+
+        currentNum = 1181
+        fetchData(currentNum)
     }
 
     private func initialSet() {
@@ -144,7 +159,7 @@ class LottoViewController: BaseViewController {
 
     override func configureHierachy() {
         super.configureHierachy()
-        [textField, titleLabel, dateLabel, separateLine, resultLabel, totalStackView].forEach { view.addSubview($0) }
+        [textField, titleLabel, dateLabel, separateLine, resultLabel, totalStackView, dismissButton].forEach { view.addSubview($0) }
         [lastButton, bonusLabel].forEach { lastStackView.addArrangedSubview($0) }
         [leftBallStackView, plusLabel, lastStackView].forEach { totalStackView.addArrangedSubview($0) }
 
@@ -191,6 +206,10 @@ class LottoViewController: BaseViewController {
             make.height.equalTo(36)
         }
 
+        lastStackView.snp.makeConstraints { make in
+            make.width.equalTo(36)
+        }
+
         plusLabel.snp.makeConstraints { make in
             make.height.equalTo(36)
         }
@@ -205,7 +224,7 @@ class LottoViewController: BaseViewController {
 
         totalStackView.snp.makeConstraints { make in
             make.top.equalTo(resultLabel.snp.bottom).offset(16)
-            make.directionalHorizontalEdges.equalToSuperview().inset(16)
+            make.directionalHorizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(60)
         }
     }
@@ -229,6 +248,34 @@ class LottoViewController: BaseViewController {
             leftBallStackView.addArrangedSubview(button)
             buttonArray.append(button)
         }
+        print(buttonArray)
+    }
+
+    @objc private func dismissButtonTapped() {
+        dismiss(animated: true)
+    }
+
+    private func fetchData(_ number: Int) {
+        let url = "https://dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(number)"
+        AF.request(url, method: .get)
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: LotteryModel.self) { response in
+            switch response.result {
+            case .success(let response):
+                self.updateUI(response)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+
+    private func updateUI(_ data: LotteryModel) {
+        for i in buttonArray.indices {
+            buttonArray[i].setTitle("\(data.lottoArray[i])", for: .normal)
+            buttonArray[i].setupColor(data.lottoArray[i])
+        }
+
+        dateLabel.text = data.drwNoDate + " 추첨"
     }
 }
 
@@ -258,12 +305,12 @@ extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print(row)
-        let num = row + 1
-        let fullText = "\(num)회 당첨결과"
-        let attributedString = fullText.getAttributedString(.systemYellow, target: "\(num)회")
+        currentNum = row + 1
+        fetchData(currentNum)
+        let fullText = "\(currentNum)회 당첨결과"
+        let attributedString = fullText.getAttributedString(.systemYellow, target: "\(currentNum)회")
         resultLabel.attributedText = attributedString
 
-        textField.text = "\(num)"
+        textField.text = "\(currentNum)"
     }
 }
