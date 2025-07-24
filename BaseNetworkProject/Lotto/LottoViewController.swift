@@ -248,7 +248,6 @@ class LottoViewController: BaseViewController {
             leftBallStackView.addArrangedSubview(button)
             buttonArray.append(button)
         }
-        print(buttonArray)
     }
 
     @objc private func dismissButtonTapped() {
