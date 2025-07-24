@@ -230,7 +230,7 @@ class LottoViewController: BaseViewController {
     }
 
     private func makeButtons() {
-        for i in 0..<7 {
+        for i in 0..<6 {
             let button = UIButton()
             button.setTitle("12", for: .normal)
             button.setTitleColor(.white, for: .normal)
