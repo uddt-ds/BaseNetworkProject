@@ -41,7 +41,6 @@ class MovieViewController: UIViewController, BaseVCProtocol {
 
 //        currentData = MovieInfo.movies
         currentDate = DateFormat.makeYesterDay()
-        print(currentDate)
         fetch(date: currentDate)
 
         tableView.delegate = self
@@ -102,6 +101,8 @@ class MovieViewController: UIViewController, BaseVCProtocol {
                     self.tableView.reloadData()
                 }
             case .failure(let error):
+                let title = "입력된 날짜 또는 네트워크 연결 상태를 확인해주세요"
+                self.showAlert(title)
                 print(error)
             }
         }
@@ -114,6 +115,13 @@ class MovieViewController: UIViewController, BaseVCProtocol {
 //        currentDate = text
         fetch(date: text)
         view.endEditing(true)
+    }
+
+    private func showAlert(_ title: String) {
+        let vc = UIAlertController(title: "경고", message: title, preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .default)
+        vc.addAction(action)
+        present(vc, animated: true)
     }
 }
 
