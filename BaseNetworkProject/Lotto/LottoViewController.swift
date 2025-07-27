@@ -258,6 +258,7 @@ class LottoViewController: BaseViewController {
             .responseDecodable(of: LotteryModel.self) { response in
             switch response.result {
             case .success(let response):
+                PickerViewData.baseDate = response.drwNoDate
                 self.updateUI(response)
             case .failure(let error):
                 print(error)

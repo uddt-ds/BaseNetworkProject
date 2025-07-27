@@ -91,7 +91,8 @@ class MovieViewController: UIViewController, BaseVCProtocol {
     }
 
     private func fetch(date: String) {
-        let url = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=db57e192674e643639b0af1738f61186&targetDt=\(date)"
+
+        let url = NetworkManager.makeComponents(date: date)
 
         AF.request(url, method: .get).responseDecodable(of: MovieResult.self) { response in
             switch response.result {

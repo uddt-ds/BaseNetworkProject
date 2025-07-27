@@ -18,7 +18,8 @@ import Foundation
 struct PickerViewData {
     // 기준 회차, 기준 Date
     static var baseLotteryCount = 1181
-    static var baseDate = "202507262230"
+
+    static var baseDate: String = ""
 
     static var lotteryCount: Int {
         if DateFormat.isUpdateDay() {
